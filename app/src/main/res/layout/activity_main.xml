@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/request_prem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saf请求文件夹权限" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_prem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存文件夹访问权限" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saf创建文件" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/select_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saf选择文件" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/write_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saf写入文件" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/read_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saf读取文件" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saf删除文件" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新建图片" />
+    </LinearLayout>
+
+</LinearLayout>
