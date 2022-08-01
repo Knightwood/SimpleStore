@@ -1,13 +1,12 @@
 package com.kiylx.store_lib.kit.ext
 
 /**
- * 传入参数不能为null
- *
- * @param block 使用try catch 块执行的匿名函数
+ * try-catch
+ * @param block: (T) -> R 使用try catch 块执行的匿名函数
  *
  * T: block的传入参数类型 R: block的返回参数类型
  */
-inline fun <T : Any, R> T.runSafely(block: (T) -> R) = try {
+inline fun <T, R> T.runSafely(block: (T) -> R) = try {
     block(this)
 } catch (e: Exception) {
     e.printStackTrace()
@@ -17,7 +16,7 @@ inline fun <T : Any, R> T.runSafely(block: (T) -> R) = try {
 /**
  * 传入参数可以为null
  *
- * @param block 使用try catch 块执行的匿名函数
+ * @param block: (T?) -> R 使用try catch 块执行的匿名函数
  *
  * T: block的传入参数类型 R: block的返回参数类型
  */
@@ -29,9 +28,9 @@ inline fun <T : Any, R> T?.runSafelyNullable(block: (T?) -> R) = try {
 }
 
 /**
- * 传入参数为null将会抛出异常
+ * 传入参数为null将会抛出异常，并被捕获
  *
- * @param block 使用try catch 块执行的匿名函数
+ * @param block: (T) -> R 使用try catch 块执行的匿名函数
  *
  * T: block的传入参数类型 R: block的返回参数类型
  */

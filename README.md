@@ -23,7 +23,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 ```
 //申请一个目录的读写权限
 helper.requestOneFolder {uri-> //被用户选择的目录uri
-
+    //调用savePerms后，可以把uri存储起来
 }
 
 //保存目录的读写权限
@@ -48,6 +48,7 @@ helper.deleteFile(fileUri) {b->
  helper.readFile(testFileUri) {
    val bytes = it.readBytes()
    makeToast(bytes.toString())
+ }
                     
 //选择文件
 helper.selectFile {
@@ -58,19 +59,19 @@ helper.selectFile {
 
 ## MediaStore部分
 
-1. 在`FragmentActivity`或`Fragment`中初始化一个`helper`对象。（不一定非要在`onCreate`之类的地方初始化）
+1. 在`FragmentActivity`或`Fragment`中初始化一个`mediaStoreHelper`对象。（不一定非要在`onCreate`之类的地方初始化）
 
 ```
 override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-		val helper: MediaStoreHelper.Helper = StoreX.initMediaStore(this)
+		val mediaStoreHelper: MediaStoreHelper.Helper = StoreX.initMediaStore(this)
 	}
 ```
 
-2. 调用`helper`中的方法，例如：
+2. 调用`mediaStoreHelper`中的方法，例如：
 
-​				把一张图片存进图库里
+   把一张图片存进图库里
 
 ```
   val bitmap =

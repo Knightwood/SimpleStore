@@ -4,10 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
-import com.kiylx.store_lib.kit.fileProcessResult
-import com.kiylx.store_lib.kit.input
-import com.kiylx.store_lib.kit.noNullUriResult
-import com.kiylx.store_lib.kit.output
+import com.kiylx.store_lib.kit.*
 
 interface FileMethod {
     /**
@@ -19,6 +16,21 @@ interface FileMethod {
      * 保留对应目录的读写权限
      */
     fun savePerms(uri: Uri)
+    /**
+     * 取消某个目录的权限
+     * @param uri 需要取消权限的目录uri
+     */
+    fun releaseFolderPerms(
+        uri: Uri,
+    )
+    /**
+     * 使用saf打开一个用户选择的文件
+     */
+    fun selectFile(
+        pickerInitialUri: String? = null,
+        fileType: String = "*/*",
+        block: noNullUriResult,
+    )
 
     /**
      * @param fileName 文件名
@@ -36,53 +48,28 @@ interface FileMethod {
     )
 
 
-    /**
-     * 使用saf打开一个用户选择的文件
-     */
-    fun selectFile(
-        pickerInitialUri: String? = null,
-        fileType: String = "*/*",
-        block: noNullUriResult,
-    )
-
-    fun readFile(
-        uri: Uri,
-        input: input,
-    )
-
-    fun writeFile(
-        uri: Uri,
-        output: output,
-    )
-
     fun deleteFile(
         uri: Uri,
         block: fileProcessResult,
     )
 
-    fun copyFile(sourceFileUri: Uri, targetFolderUri: Uri, block: noNullUriResult)
+    fun copyFile(sourceFileUri: Uri, targetFolderUri: Uri, block: uriResult)
 
 
     fun moveFile(
         sourceFileUri: Uri,
         sourceFileParentUri: Uri,
         targetFolderUri: Uri,
-        block: noNullUriResult,
+        block: uriResult,
     )
 
 
-    fun rename(sourceFileUri: Uri, newName: String, block: noNullUriResult)
+    fun rename(sourceFileUri: Uri, newName: String, block: uriResult)
 
     @RequiresApi(24)
     fun removeFile(sourceFileUri: Uri, sourceFileParentUri: Uri, block: fileProcessResult)
 
-    /**
-     * 取消某个目录的权限
-     * @param uri 需要取消权限的目录uri
-     */
-    fun releaseFolderPerms(
-        uri: Uri,
-    )
+
 
     /**
      * @param parentUri 要创建文件的父文件夹uri
@@ -107,7 +94,15 @@ interface FileMethod {
         displayName: String,
         block: (file: DocumentFile?) -> Unit,
     )
+    fun readFile(
+        uri: Uri,
+        input: input,
+    )
 
+    fun writeFile(
+        uri: Uri,
+        output: output,
+    )
     fun getContentResolver(): ContentResolver
 
     /**

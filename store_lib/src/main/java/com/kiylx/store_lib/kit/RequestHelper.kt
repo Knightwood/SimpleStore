@@ -23,7 +23,7 @@ object RequestHelper {
         starter?.let { activity_ ->
             val fragment = CallbackFragment()
             fragment.init(intent) { result ->
-                block(result)
+                block(result)//将得到的intent传递给函数的调用者，并结束此隐藏的fragment
                 activity_.supportFragmentManager
                     .beginTransaction()
                     .remove(fragment)
