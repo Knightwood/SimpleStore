@@ -48,7 +48,7 @@ interface MediaStoreMethod {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun newDownloadFile(
         name: String,
-        path: String = "",
+        relativePath: String = "",
         mime: String,
         block: noNullUriResult,
     )
@@ -56,7 +56,7 @@ interface MediaStoreMethod {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun newMovieFile(
         name: String,
-        path: String = "",
+        relativePath: String = "",
         mime: String,
         block: noNullUriResult,
     )
@@ -64,7 +64,7 @@ interface MediaStoreMethod {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun newMusicFile(
         name: String,
-        path: String = "",
+        relativePath: String = "",
         mime: String,
         block: noNullUriResult,
     )

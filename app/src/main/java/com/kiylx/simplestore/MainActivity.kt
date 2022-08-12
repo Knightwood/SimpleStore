@@ -19,14 +19,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
 import com.google.android.material.button.MaterialButton
+import com.kiylx.store_lib.MediaStoreHelper
 import com.kiylx.store_lib.StoreX
 import com.kiylx.store_lib.kit.MimeTypeConsts
 import com.kiylx.store_lib.kit.ext.filter
 import com.kiylx.store_lib.kit.ext.makeToast
 import com.kiylx.store_lib.kit.ext.writeFileFromUri
 import com.kiylx.store_lib.mediastore.FileLocate
-import com.kiylx.store_lib.mediastore.MediaStoreHelper
-import com.kiylx.store_lib.saf.SAFHelper
+import com.kiylx.store_lib.StorageXHelper
+import com.kiylx.store_lib.SafHelper
+import com.kiylx.store_lib.documentfile.deleteFile
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -40,16 +42,20 @@ import kotlin.concurrent.thread
 // 2、如果你的 app 卸载后再重装的话系统不会认为是同一个 app（也就是你卸载之前创建的文件，再次安装 app 后必须先申请 READ_EXTERNAL_STORAGE 权限后才能获取到）
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var helper: SAFHelper.Helper
+    private lateinit var xHelper:StorageXHelper
+    private lateinit var helper: SafHelper.Helper
     private lateinit var mediaStoreHelper: MediaStoreHelper.Helper
+
     private val hander = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        helper = StoreX.initSaf(this)
-        mediaStoreHelper = StoreX.initMediaStore(this)
+        xHelper = StoreX.with(this)
+        helper=xHelper.safHelper
+        mediaStoreHelper = xHelper.mediaStoreHelper
+
         requestPermission()
         findViewById<MaterialButton>(R.id.request_prem).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.save_prem).setOnClickListener(this)
@@ -116,7 +122,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     if (testFileUri == Uri.EMPTY) {
                         makeToast("没有文件可删除")
                     } else
-                        helper.deleteFile(testFileUri) {
+                       deleteFile(testFileUri) {
                             if (it) {
                                 testFileUri = Uri.EMPTY
                                 makeToast("文件删除成功")

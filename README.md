@@ -6,6 +6,22 @@
 
 # 如何使用
 
+## 初始化
+
+```
+//这个是存储的帮助类
+private lateinit var xHelper:StorageXHelper
+//saf帮助类
+private lateinit var helper: SafHelper.Helper
+//mediastore的帮助类
+private lateinit var mediaStoreHelper: MediaStoreHelper.Helper
+
+//初始化
+xHelper = StoreX.with(this)
+helper=xHelper.safHelper
+mdiaStoreHelper = xHelper.mediaStoreHelper
+```
+
 ## SAF部分
 
 1. 在`FragmentActivity`或`Fragment`中初始化一个`helper`对象。（不一定非要在`onCreate`之类的地方初始化）
@@ -14,7 +30,7 @@
 override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-		val helper: SAFHelper.Helper = StoreX.initSaf(this)
+		val helper: SAFHelper.Helper = StoreX.with(this).safHelper
 	}
 ```
 
@@ -29,12 +45,6 @@ helper.requestOneFolder {uri-> //被用户选择的目录uri
 //保存目录的读写权限
 helper.savePerms(uri)
 
-//删除一个文件
-helper.deleteFile(fileUri) {b->
-  if (b) {
-     makeToast("文件删除成功")
-  }
-}
 
 //写文件
  helper.writeFile(testFileUri) { outputStream ->
@@ -65,8 +75,10 @@ helper.selectFile {
 override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-		val mediaStoreHelper: MediaStoreHelper.Helper = StoreX.initMediaStore(this)
-	}
+        val mediaStoreHelper: MediaStoreHelper.Helper = 
+                               StoreX.with(this).mediaStoreHelper
+
+}
 ```
 
 2. 调用`mediaStoreHelper`中的方法，例如：

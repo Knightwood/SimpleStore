@@ -10,8 +10,8 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import androidx.fragment.app.Fragment
-import com.kiylx.store_lib.kit.ext.runSafely
 import com.kiylx.store_lib.kit.noNullUriResult
+import java.io.File
 
 class MediaStoreFragment : Fragment(), MediaStoreMethod {
     /**
@@ -26,7 +26,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         block: noNullUriResult,
     ) {
         if ((relativePath.isNotEmpty())) {
-            genPic(name, "${Environment.DIRECTORY_DCIM}/$relativePath", mime, block)
+            genPic(name, "${Environment.DIRECTORY_DCIM}${File.separator}$relativePath", mime, block)
         } else {
             genPic(name, Environment.DIRECTORY_DCIM, mime, block)
         }
@@ -40,14 +40,14 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         block: noNullUriResult,
     ) {
         if ((relativePath.isNotEmpty())) {
-            genPic(name, "${Environment.DIRECTORY_PICTURES}/$relativePath", mime, block)
+            genPic(name, "${Environment.DIRECTORY_PICTURES}${File.separator}$relativePath", mime, block)
         } else {
             genPic(name, Environment.DIRECTORY_PICTURES, mime, block)
         }
     }
 
     /**
-     * @param relativePath 相对图片文件夹的相对路径
+     * @param path 相对图片文件夹的相对路径
      * 例如 传入test，会产生 storage/emulated/0/Pictures/test/
      */
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -76,12 +76,12 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun newDownloadFile(
         name: String,
-        path: String,
+        relativePath: String,
         mime: String,
         block: noNullUriResult,
     ) {
-        if (path.isNotEmpty()) {
-            genDownloadFile(name, Environment.DIRECTORY_DOWNLOADS + path, mime, block)
+        if (relativePath.isNotEmpty()) {
+            genDownloadFile(name, "${Environment.DIRECTORY_DOWNLOADS}${File.separator}$relativePath", mime, block)
         } else {
             genDownloadFile(name, Environment.DIRECTORY_DOWNLOADS, mime, block)
         }
@@ -113,12 +113,12 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun newMovieFile(
         name: String,
-        path: String,
+        relativePath: String,
         mime: String,
         block: noNullUriResult,
     ) {
-        if (path.isNotEmpty()) {
-            genMovieFile(name, Environment.DIRECTORY_MOVIES + path, mime, block)
+        if (relativePath.isNotEmpty()) {
+            genMovieFile(name, "${Environment.DIRECTORY_MOVIES}${File.separator}$relativePath", mime, block)
         } else {
             genMovieFile(name, Environment.DIRECTORY_MOVIES, mime, block)
         }
@@ -150,12 +150,12 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun newMusicFile(
         name: String,
-        path: String,
+        relativePath: String,
         mime: String,
         block: noNullUriResult,
     ) {
-        if (path.isNotEmpty()) {
-            genMusicFile(name, Environment.DIRECTORY_MUSIC + path, mime, block)
+        if (relativePath.isNotEmpty()) {
+            genMusicFile(name, "${Environment.DIRECTORY_MUSIC}${File.separator}$relativePath", mime, block)
         } else {
             genMusicFile(name, Environment.DIRECTORY_MUSIC, mime, block)
         }
@@ -287,13 +287,15 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
 }
 
 /**
- * 表示几个公共文件夹的位置
+ * Environment下的字段，表示几个公共文件夹的位置
  *
  * IMAGE：Environment.DIRECTORY_PICTURES
  * DCIM：Environment.DIRECTORY_DCIM
  * VIDEO：Environment.DIRECTORY_MOVIES
  * AUDIO：Environment.DIRECTORY_MUSIC
  * DOWNLOAD：Environment.DIRECTORY_DOWNLOADS
+ *
+ * MediaStore下的EXTERNAL_CONTENT_URI，表示数据库的字段
  */
 enum class FileLocate(val uri: Uri) {
     IMAGE(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
