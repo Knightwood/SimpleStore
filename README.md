@@ -1,8 +1,15 @@
-# 用途
+# 用途 
 
 * 简化了下`SAF`访问框架的使用
 
 * 添加了一点点`MediaStore`的简便方法
+* [![版本](https://jitpack.io/v/Knightwood/SimpleStore.svg)](https://jitpack.io/#Knightwood/SimpleStore)
+
+
+```
+implementation 'com.github.Knightwood:SimpleStore:1.0'
+
+```
 
 # 如何使用
 
