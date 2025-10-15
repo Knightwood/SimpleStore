@@ -5,6 +5,11 @@
 * 添加了一点点`MediaStore`的简便方法
 * [![版本](https://jitpack.io/v/Knightwood/SimpleStore.svg)](https://jitpack.io/#Knightwood/SimpleStore)
 
+Android4.4添加了SAF访问框架（配合DocumentFile API），使用此框架可以读写手机中的任意文件，获取某文件夹的读写权限。
+
+Android10以上使用了分区存储：
+1. 在没有“文件管理权限”的情况下app不可以使用File API读写公共目录、媒体目录等（Download文件夹除外），需要使用SAF框架获取目录读写权限
+2. 读写媒体文件需要使用MediaStore
 
 ```
 implementation 'com.github.Knightwood:SimpleStore:1.0'
