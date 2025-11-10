@@ -5,19 +5,15 @@ import java.io.InputStream
 import java.io.OutputStream
 
 /**
- * 通知处理结果
- * 用true或false表示结果
+ * 通知处理结果 用true或false表示结果
  */
-typealias fileProcessResult = (result: Boolean) -> Unit
+typealias FileProcessResult = Function1<Boolean, Unit>
+
 /**
  * 通知文件的路径uri
  */
-typealias uriResult = (uri: Uri?) -> Unit
-/**
- * 通知文件的路径uri
- */
-typealias noNullUriResult = (uri: Uri) -> Unit
+typealias UriResult = Function1<Uri?, Unit>
 
-typealias input = (inputStream: InputStream) -> Unit
+typealias InputConsumer = Function1<InputStream?, Unit>
 
-typealias output = (outputStream: OutputStream) -> Unit
+typealias OutputConsumer = Function1<OutputStream?, Unit>

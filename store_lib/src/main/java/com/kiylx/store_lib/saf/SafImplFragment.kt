@@ -7,12 +7,11 @@ import android.os.Build
 import android.provider.DocumentsContract
 import androidx.fragment.app.Fragment
 import com.kiylx.store_lib.kit.ext.readFileFromUri
-import com.kiylx.store_lib.kit.ext.runSafelyNoNull
 import com.kiylx.store_lib.kit.ext.startActivityForResult
 import com.kiylx.store_lib.kit.ext.writeFileFromUri
-import com.kiylx.store_lib.kit.input
-import com.kiylx.store_lib.kit.noNullUriResult
-import com.kiylx.store_lib.kit.output
+import com.kiylx.store_lib.kit.InputConsumer
+import com.kiylx.store_lib.kit.UriResult
+import com.kiylx.store_lib.kit.OutputConsumer
 
 /** 从 MediaStore接口或者SAF获取到文件Uri后，请利用Uri打开FD 或者输入输出流，而不要转换成文件路径去访问。 */
 class SafImplFragment : Fragment(), FileMethod {
@@ -20,7 +19,7 @@ class SafImplFragment : Fragment(), FileMethod {
     /** 申请一个文件夹的使用权限 如果直接返回，则intent为null，不触发后续处理。如果intent.data为null,则报错 */
     override fun requestOneFolder(
         pickerInitialUri: String?,
-        block: noNullUriResult, /* = (uri: android.net.Uri) -> kotlin.Unit */
+        block: UriResult, /* = (uri: android.net.Uri?) -> kotlin.Unit */
     ) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
             //可选，添加一个初始路径
@@ -29,7 +28,7 @@ class SafImplFragment : Fragment(), FileMethod {
             }
         }
         startActivityForResult(intent) {
-            it?.data.runSafelyNoNull(block)
+            block(it?.data)
         }
     }
 
@@ -60,7 +59,7 @@ class SafImplFragment : Fragment(), FileMethod {
     override fun selectFile(
         pickerInitialUri: String?,
         fileType: String,
-        block: noNullUriResult,/* = (uri: android.net.Uri) -> kotlin.Unit */
+        block: UriResult,/* = (uri: android.net.Uri?) -> kotlin.Unit */
     ) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -71,7 +70,7 @@ class SafImplFragment : Fragment(), FileMethod {
             }
         }
         startActivityForResult(intent) {
-            it?.data.runSafelyNoNull(block)
+            block(it?.data)
         }
     }
 
@@ -85,7 +84,7 @@ class SafImplFragment : Fragment(), FileMethod {
         fileName: String,
         fileType: String,
         pickerInitialUri: String?,
-        block: noNullUriResult, /* (uri: Uri) -> Unit */
+        block: UriResult, /* (uri: Uri?) -> Unit */
     ) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -97,16 +96,16 @@ class SafImplFragment : Fragment(), FileMethod {
             }
         }
         startActivityForResult(intent) {
-            it?.data.runSafelyNoNull(block)
+            block(it?.data)
         }
     }
 
-    override fun readFile(uri: Uri, input: input) {
-        requireActivity().readFileFromUri(uri, input)
+    override fun readFile(uri: Uri, inputConsumer: InputConsumer) {
+        requireActivity().readFileFromUri(uri, inputConsumer)
     }
 
-    override fun writeFile(uri: Uri, output: output) {
-        requireActivity().writeFileFromUri(uri, output)
+    override fun writeFile(uri: Uri, outputConsumer: OutputConsumer) {
+        requireActivity().writeFileFromUri(uri, outputConsumer)
     }
 
     override fun getContentResolver(): ContentResolver = requireActivity().contentResolver

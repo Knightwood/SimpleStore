@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import com.kiylx.store_lib.kit.noNullUriResult
+import com.kiylx.store_lib.kit.UriResult
 
 /**
  *如需访问由其他应用创建的文件，必须满足以下所有条件：
@@ -34,7 +34,7 @@ interface MediaStoreMethod {
         name: String,
         mime: String,
         relativePath: String = "",
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -42,7 +42,7 @@ interface MediaStoreMethod {
         name: String,
         relativePath: String = "",
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -50,7 +50,7 @@ interface MediaStoreMethod {
         name: String,
         relativePath: String = "",
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -58,7 +58,7 @@ interface MediaStoreMethod {
         name: String,
         relativePath: String = "",
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -66,7 +66,7 @@ interface MediaStoreMethod {
         name: String,
         relativePath: String = "",
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     /**

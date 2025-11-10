@@ -10,7 +10,7 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import androidx.fragment.app.Fragment
-import com.kiylx.store_lib.kit.noNullUriResult
+import com.kiylx.store_lib.kit.UriResult
 import java.io.File
 
 class MediaStoreFragment : Fragment(), MediaStoreMethod {
@@ -23,7 +23,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         mime: String,
         relativePath: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         if ((relativePath.isNotEmpty())) {
             genPic(name, "${Environment.DIRECTORY_DCIM}${File.separator}$relativePath", mime, block)
@@ -37,7 +37,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         relativePath: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         if ((relativePath.isNotEmpty())) {
             genPic(name, "${Environment.DIRECTORY_PICTURES}${File.separator}$relativePath", mime, block)
@@ -55,7 +55,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         path: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.RELATIVE_PATH, path)
@@ -66,11 +66,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         // 通过 ContentResolver 在指定的公共目录下按照指定的 ContentValues 创建文件，会返回文件的 content uri（类似这样的地址 content://media/external/images/media/102）
         val uri: Uri? =
             contentResolver.insert(FileLocate.IMAGE.uri, contentValues)
-        if (uri != null) {
             block(uri)
-        } else {
-            throw Exception("底层内容提供程序返回null或崩溃")
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -78,7 +74,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         relativePath: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         if (relativePath.isNotEmpty()) {
             genDownloadFile(name, "${Environment.DIRECTORY_DOWNLOADS}${File.separator}$relativePath", mime, block)
@@ -92,7 +88,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         path: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         val contentValues = ContentValues().apply {
             put(MediaStore.Downloads.RELATIVE_PATH, path)
@@ -103,11 +99,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         // 通过 ContentResolver 在指定的公共目录下按照指定的 ContentValues 创建文件，会返回文件的 content uri（类似这样的地址 content://media/external/images/media/102）
         val uri: Uri? =
             contentResolver.insert(FileLocate.DOWNLOAD.uri, contentValues)
-        if (uri != null) {
             block(uri)
-        } else {
-            throw Exception("底层内容提供程序返回null或崩溃")
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -115,7 +107,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         relativePath: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         if (relativePath.isNotEmpty()) {
             genMovieFile(name, "${Environment.DIRECTORY_MOVIES}${File.separator}$relativePath", mime, block)
@@ -129,7 +121,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         path: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         val contentValues = ContentValues().apply {
             put(MediaStore.Video.Media.RELATIVE_PATH, path)
@@ -140,11 +132,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         // 通过 ContentResolver 在指定的公共目录下按照指定的 ContentValues 创建文件，会返回文件的 content uri（类似这样的地址 content://media/external/images/media/102）
         val uri: Uri? =
             contentResolver.insert(FileLocate.VIDEO.uri, contentValues)
-        if (uri != null) {
             block(uri)
-        } else {
-            throw Exception("底层内容提供程序返回null或崩溃")
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -152,7 +140,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         relativePath: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         if (relativePath.isNotEmpty()) {
             genMusicFile(name, "${Environment.DIRECTORY_MUSIC}${File.separator}$relativePath", mime, block)
@@ -166,7 +154,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         name: String,
         path: String,
         mime: String,
-        block: noNullUriResult,
+        block: UriResult,
     ) {
         val contentValues = ContentValues().apply {
             put(MediaStore.Audio.Media.RELATIVE_PATH, path)
@@ -177,11 +165,7 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         // 通过 ContentResolver 在指定的公共目录下按照指定的 ContentValues 创建文件，会返回文件的 content uri（类似这样的地址 content://media/external/images/media/102）
         val uri: Uri? =
             contentResolver.insert(FileLocate.AUDIO.uri, contentValues)
-        if (uri != null) {
             block(uri)
-        } else {
-            throw Exception("底层内容提供程序返回null或崩溃")
-        }
     }
 
     /**

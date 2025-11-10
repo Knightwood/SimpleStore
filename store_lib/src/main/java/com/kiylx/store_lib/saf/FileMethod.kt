@@ -2,15 +2,15 @@ package com.kiylx.store_lib.saf
 
 import android.content.ContentResolver
 import android.net.Uri
-import com.kiylx.store_lib.kit.input
-import com.kiylx.store_lib.kit.noNullUriResult
-import com.kiylx.store_lib.kit.output
+import com.kiylx.store_lib.kit.InputConsumer
+import com.kiylx.store_lib.kit.UriResult
+import com.kiylx.store_lib.kit.OutputConsumer
 
 interface FileMethod {
     /**
      * 申请一个文件夹的使用权限
      */
-    fun requestOneFolder(pickerInitialUri: String? = null, block: noNullUriResult)
+    fun requestOneFolder(pickerInitialUri: String? = null, block: UriResult)
 
     /**
      * 保留对应目录的读写权限
@@ -29,7 +29,7 @@ interface FileMethod {
     fun selectFile(
         pickerInitialUri: String? = null,
         fileType: String = "*/*",
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     /**
@@ -44,17 +44,17 @@ interface FileMethod {
         fileName: String,
         fileType: String = "*/*",
         pickerInitialUri: String? = null,
-        block: noNullUriResult,
+        block: UriResult,
     )
 
     fun readFile(
         uri: Uri,
-        input: input,
+        inputConsumer: InputConsumer,
     )
 
     fun writeFile(
         uri: Uri,
-        output: output,
+        outputConsumer: OutputConsumer,
     )
 
     fun getContentResolver(): ContentResolver

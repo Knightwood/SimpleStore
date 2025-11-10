@@ -13,6 +13,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +43,7 @@ import kotlin.concurrent.thread
 // 2、如果你的 app 卸载后再重装的话系统不会认为是同一个 app（也就是你卸载之前创建的文件，再次安装 app 后必须先申请 READ_EXTERNAL_STORAGE 权限后才能获取到）
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var xHelper:StorageXHelper
+    private lateinit var xHelper: StorageXHelper
     private lateinit var helper: SafHelper.Helper
     private lateinit var mediaStoreHelper: MediaStoreHelper.Helper
 
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
 
         xHelper = StoreX.with(this)
-        helper=xHelper.safHelper
+        helper = xHelper.safHelper
         mediaStoreHelper = xHelper.mediaStoreHelper
 
         requestPermission()
@@ -89,18 +90,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onClick(p0: View?) {
-        p0?.let { view ->
-            when (view.id) {
-                R.id.request_prem -> {
-                    helper.requestOneFolder { tree_ ->
-                        //拿到了被授予读写权限的路径，使用helper.savePerms(tree)保存权限后，可以自己存起来下次使用
-                        treeUri = tree_
-                        DocumentFile.fromTreeUri(this@MainActivity, tree_)?.let { df ->
-                            //使用DocumentFile创建文件
-                            df.createFile(MimeTypeConsts.txt, "测试saf框架")?.let {
-                                helper.writeFile(it.uri) { outputStream ->
-                                    val str = "DocumentFile测试\n"
-                                    outputStream.use { oStream ->
+        try {
+            p0?.let { view ->
+                when (view.id) {
+                    R.id.request_prem -> {
+                        helper.requestOneFolder { tree_ ->
+                            if (tree_ == null) error("没有权限")
+                            //拿到了被授予读写权限的路径，使用helper.savePerms(tree)保存权限后，可以自己存起来下次使用
+                            treeUri = tree_
+                            DocumentFile.fromTreeUri(this@MainActivity, tree_)?.let { df ->
+                                //使用DocumentFile创建文件
+                                df.createFile(MimeTypeConsts.txt, "测试saf框架")?.let {
+                                    helper.writeFile(it.uri) { oStream ->
+                                        if (oStream == null) error("无法打开输出流")
+                                        val str = "DocumentFile测试\n"
                                         //获取DocumentFile的uri，然后写入东西
                                         oStream.write(str.toByteArray(StandardCharsets.UTF_8))
                                     }
@@ -108,70 +111,87 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             }
                         }
                     }
-                }
-                R.id.save_prem -> {
-                    treeUri?.let { it1 -> helper.savePerms(it1) }
-                }
-                R.id.create_file -> {
-                    helper.createFile("测试文件", MimeTypeConsts.txt, treeUri.toString()) {
-                        testFileUri = it
-                        Log.d(tag, "$testFileUri")
-                    }
-                }
-                R.id.delete_file -> {
-                    if (testFileUri == Uri.EMPTY) {
-                        makeToast("没有文件可删除")
-                    } else
-                       deleteFile(testFileUri) {
-                            if (it) {
-                                testFileUri = Uri.EMPTY
-                                makeToast("文件删除成功")
-                            }
-                        }
-                }
-                R.id.write_file -> {
-                    if (testFileUri == Uri.EMPTY) {
-                        makeToast("没有文件可写入")
-                    } else
-                        helper.writeFile(testFileUri) { outputStream ->
-                            val str = "Storage Access Framework Example\n"
-                            outputStream.use { oStream ->
-                                oStream.write(str.toByteArray(StandardCharsets.UTF_8))
-                            }
-                        }
-                }
-                R.id.read_file -> {
-                    if (testFileUri == Uri.EMPTY) {
-                        makeToast("没有文件可读取")
-                    } else
-                        helper.readFile(testFileUri) {
-                            val bytes = it.readBytes()
-                            makeToast(bytes.toString())
-                        }
-                }
-                R.id.select_file -> {
-                    helper.selectFile {
-                        testFileUri = it
-                        Log.d(tag, "被选择文件：$it")
-                    }
-                }
-                R.id.newPic -> {
-                    val bitmap =
-                        (resources.getDrawable(R.drawable.shotcut1, null) as BitmapDrawable)
-                            .bitmap
-                    mediaStoreHelper.newPhoto("测试图片", MimeTypeConsts.png) {
-                        writeFileFromUri(it) { os ->
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 85, os)
-                        }
-                    }
-                }
-                R.id.queryVideo -> {
-                    thread { query() }
-                }
-                else -> {
 
+                    R.id.save_prem -> {
+                        treeUri?.let { it1 -> helper.savePerms(it1) }
+                    }
+
+                    R.id.create_file -> {
+                        helper.createFile("测试文件", MimeTypeConsts.txt, treeUri.toString()) {
+                            if (it == null) error("无法创建文件")
+                            testFileUri = it
+                            Log.d(tag, "$testFileUri")
+                        }
+                    }
+
+                    R.id.delete_file -> {
+                        if (testFileUri == Uri.EMPTY) {
+                            makeToast("没有文件可删除")
+                        } else
+                            deleteFile(testFileUri) {
+                                if (it) {
+                                    testFileUri = Uri.EMPTY
+                                    makeToast("文件删除成功")
+                                }
+                            }
+                    }
+
+                    R.id.write_file -> {
+                        if (testFileUri == Uri.EMPTY) {
+                            makeToast("没有文件可写入")
+                        } else
+                            helper.writeFile(testFileUri) { oStream ->
+                                val str = "Storage Access Framework Example\n"
+                                if (oStream == null) error("无法打开输出流")
+                                oStream.write(str.toByteArray(StandardCharsets.UTF_8))
+
+                            }
+                    }
+
+                    R.id.read_file -> {
+                        if (testFileUri == Uri.EMPTY) {
+                            makeToast("没有文件可读取")
+                        } else
+                            helper.readFile(testFileUri) {
+                                if (it == null) error("无法打开输入流")
+                                val bytes = it.readBytes()
+                                makeToast(bytes.toString())
+                            }
+                    }
+
+                    R.id.select_file -> {
+                        helper.selectFile {
+                            if (it == null) error("没有选择文件")
+                            testFileUri = it
+                            Log.d(tag, "被选择文件：$it")
+                        }
+                    }
+
+                    R.id.newPic -> {
+                        val bitmap =
+                            (resources.getDrawable(R.drawable.shotcut1, null) as BitmapDrawable)
+                                .bitmap
+                        mediaStoreHelper.newPhoto("测试图片", MimeTypeConsts.png) {
+                            if (it == null) error("无法创建文件")
+                            writeFileFromUri(it) { os ->
+                                if (os == null) error("无法打开输出流")
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 85, os)
+                            }
+                        }
+                    }
+
+                    R.id.queryVideo -> {
+                        thread { query() }
+                    }
+
+                    else -> {
+
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Log.e(tag, e.message, e)
+            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -200,11 +220,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         //排序：名称的升序
         val sortOrder = "${MediaStore.Video.Media.DISPLAY_NAME} ASC"
 
-        mediaStoreHelper.queryFile(FileLocate.VIDEO,
+        mediaStoreHelper.queryFile(
+            FileLocate.VIDEO,
             projection,
             selection,
             selectionArgs,
-            sortOrder) { cursor ->
+            sortOrder
+        ) { cursor ->
             // Cache column indices.
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
             val nameColumn =
@@ -249,8 +271,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     // 注：WRITE_EXTERNAL_STORAGE 权限已经无效了
     private fun requestPermission() {
         val storagePermissions = arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE)
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(this, storagePermissions, 233)
         }
