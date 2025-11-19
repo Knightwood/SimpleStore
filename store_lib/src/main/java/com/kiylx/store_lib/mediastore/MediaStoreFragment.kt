@@ -130,9 +130,8 @@ class MediaStoreFragment : Fragment(), MediaStoreMethod {
         }
         val contentResolver = requireActivity().contentResolver
         // 通过 ContentResolver 在指定的公共目录下按照指定的 ContentValues 创建文件，会返回文件的 content uri（类似这样的地址 content://media/external/images/media/102）
-        val uri: Uri? =
-            contentResolver.insert(FileLocate.VIDEO.uri, contentValues)
-            block(uri)
+        val uri: Uri? = contentResolver.insert(FileLocate.VIDEO.uri, contentValues)
+        block(uri)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
