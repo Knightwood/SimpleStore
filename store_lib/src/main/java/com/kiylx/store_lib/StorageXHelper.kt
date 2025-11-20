@@ -12,22 +12,23 @@ import com.kiylx.store_lib.saf.FileMethod
 import com.kiylx.store_lib.saf.SafImplFragment
 
 class StorageXHelper : LifecycleEventObserver {
-    private var activity: FragmentActivity
-        set(value) {
-            field = value
-            value.lifecycle.addObserver(this)
-        }
+    private val activity: FragmentActivity
     private var fragment: Fragment? = null
 
     constructor(fragment: Fragment) {
         this.fragment = fragment
         this.activity = fragment.requireActivity()
+        observeLifecycle()
     }
 
     constructor(fragmentActivity: FragmentActivity) {
         this.activity = fragmentActivity
+        observeLifecycle()
     }
 
+    private fun observeLifecycle() {
+        activity.lifecycle.addObserver(this)
+    }
     /**
      * 在Activity中获取 FragmentManager，如果在Fragment中，则获取 ChildFragmentManager。
      */

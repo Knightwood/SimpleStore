@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 36
     namespace = "com.kiylx.simplestore"
     defaultConfig {
         applicationId = "com.kiylx.simplestore"
@@ -53,5 +53,6 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(project(":store_lib"))
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+    implementation("androidx.documentfile:documentfile:1.1.0")
 
 }

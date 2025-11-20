@@ -1,6 +1,6 @@
 package com.androidx.mediastorefile.item
 
-class ImageMediaFile(
+data class ImageMediaFile(
     val picasaId: String? = null,              // 对应 PICASA_ID（已废弃）
     val isPrivate: Int? = null,                // 对应 IS_PRIVATE
     val latitude: Float? = null,               // 对应 LATITUDE（已废弃）

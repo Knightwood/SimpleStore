@@ -1,9 +1,12 @@
 package com.androidx.mediastorefile
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.provider.MediaStore
 import com.androidx.mediastorefile.item.DownloadMediaFile
-import com.androidx.mediastorefile.parser.download.downloadMediaCursorMapper
+import com.androidx.mediastorefile.parser.download.newDownloadMediaCursorMapper
+
 
 object MediaStoreQuery {
     // 查询下载目录下的所有文件
@@ -16,20 +19,36 @@ object MediaStoreQuery {
             MediaStore.Downloads.SIZE,
             MediaStore.Downloads.DATE_ADDED,
             MediaStore.Downloads.MIME_TYPE,
-            MediaStore.Downloads.RELATIVE_PATH
+            MediaStore.Downloads.RELATIVE_PATH,
         )
 
-        val sortOrder = "${MediaStore.Downloads.DATE_ADDED} DESC"
+        val sortOrder =null// "${MediaStore.Downloads.DATE_ADDED} DESC"
+        val selection =null// "${MediaStore.Downloads.DISPLAY_NAME} LIKE ?"
+        val selectionArgs =null// arrayOf("%.apk")
 
         context.contentResolver.query(
-            MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+//            MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
+            MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL),
+//            MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL),
             projection,
-            null, // 查询条件
-            null, // 查询参数
+            selection,//查询条件
+            selectionArgs,//查询参数
             sortOrder
         )?.use { cursor ->
-            files = downloadMediaCursorMapper.parse(cursor)
+            files = newDownloadMediaCursorMapper().parse(cursor)
         }
+//        Log.d(TAG,"查询完成")
         return files
     }
+
+//    fun scan(context: Context) {
+//        context.run {
+//            val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+//            val contentUri = Uri.fromFile(yourNewFile)
+//            mediaScanIntent.setData(contentUri)
+//            sendBroadcast(mediaScanIntent)
+//        }
+//    }
 }
+
+private const val TAG = "MediaStoreQuery"

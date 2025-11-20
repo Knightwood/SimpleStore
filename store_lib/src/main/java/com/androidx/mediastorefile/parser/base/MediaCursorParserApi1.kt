@@ -2,12 +2,15 @@ package com.androidx.mediastorefile.parser.base
 
 import android.database.Cursor
 import android.provider.MediaStore
+import android.util.Log
 import com.androidx.mediastorefile.item.MediaFile
 import com.androidx.mediastorefile.parser.utils.ColumnNameIndexMap
 import com.androidx.mediastorefile.parser.utils.CursorMapper
 import com.androidx.mediastorefile.parser.utils.indexOf
 import com.androidx.mediastorefile.parser.utils.ICursorParser
 import com.androidx.mediastorefile.parser.utils.mapOfNullable
+
+private const val TAG = "MediaCursorParserApi1"
 
 class MediaCursorParserApi1 : ICursorParser<MediaFile>() {
     override fun parseColumnIndex(cursor: Cursor): ColumnNameIndexMap {
@@ -35,9 +38,16 @@ class MediaCursorParserApi1 : ICursorParser<MediaFile>() {
             height_column,
             title_column,
         )
+//            .also {
+//            Log.d(TAG, "ColumnNameIndexMap: $it")
+//        }
     }
 
     override fun setFieldValue(cursor: Cursor, data: MediaFile) {
+        if (map.isEmpty()) {
+            Log.d(TAG, "没有列名索引映射关系，可能在AggregationCursorMapper查询时未使用同一个基础映射实例，请检查！")
+        }
+//        Log.d(TAG, "setFieldValue-ColumnNameIndexMap: $map")
         // 从cursor中读取各个字段的值
         val id = cursor.getLongOr(MediaStore.MediaColumns._ID)
         val count = cursor.getIntOr(MediaStore.MediaColumns._COUNT)
@@ -50,6 +60,7 @@ class MediaCursorParserApi1 : ICursorParser<MediaFile>() {
         val width = cursor.getIntOr(MediaStore.MediaColumns.WIDTH)
         val height = cursor.getIntOr(MediaStore.MediaColumns.HEIGHT)
         val title = cursor.getStringOrNull(MediaStore.MediaColumns.TITLE)
+//        Log.d(TAG, "ID: $id,SIZE: $size,DISPLAY_NAME: $display_name,DATE_ADDED: $date_added")
         // 创建MediaFakeFile实例
         data.apply {
             this._id = id
@@ -68,8 +79,7 @@ class MediaCursorParserApi1 : ICursorParser<MediaFile>() {
 
 }
 
-val basicMediaStoreMapper
-    get() = CursorMapper(::MediaFile) +
-            MediaCursorParserApi1() +
-            MediaCursorParserApi29() +
-            MediaCursorParserApi30()
+fun newBasicMediaStoreMapper() = CursorMapper(::MediaFile) +
+        MediaCursorParserApi1() +
+        MediaCursorParserApi29() +
+        MediaCursorParserApi30()

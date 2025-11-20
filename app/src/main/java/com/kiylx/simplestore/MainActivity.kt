@@ -19,6 +19,7 @@ import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
+import com.androidx.mediastorefile.MediaStoreQuery
 import com.google.android.material.button.MaterialButton
 import com.kiylx.store_lib.MediaStoreHelper
 import com.kiylx.store_lib.StoreX
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<MaterialButton>(R.id.select_file).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.newPic).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.queryVideo).setOnClickListener(this)
+        findViewById<MaterialButton>(R.id.queryDownloads).setOnClickListener(this)
 
     }
 
@@ -181,7 +183,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     R.id.queryVideo -> {
-                        thread { query() }
+                        thread {
+                            mediaStoreHelper.newDownloadFile("12121", "", "txt") {
+                                it?.let {
+                                    writeFileFromUri(it) { os ->
+                                        if (os == null) error("无法打开输出流")
+                                        os.write("测试".toByteArray())
+                                    }
+                                }
+                            }
+//                            query()
+                        }
+                    }
+
+                    R.id.queryDownloads -> {
+                        thread {
+                            val result = MediaStoreQuery.queryAllFilesInDownloads(this)
+                            for (file in result) {
+                                Log.d(tag, "文件：$file")
+                            }
+                        }
                     }
 
                     else -> {

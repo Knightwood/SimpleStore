@@ -3,6 +3,7 @@ package com.androidx.mediastorefile.parser.utils
 import android.database.Cursor
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 
 /**
  * 1. 在某个api level下解析列对应的索引，并将索引保存在map中
@@ -11,11 +12,10 @@ import android.provider.MediaStore
 abstract class ICursorParser<T>(
     val apiLevel: Int = Build.VERSION_CODES.BASE,
 ) {
-    protected val map: ColumnNameIndexMutableMap = mutableMapOf()
+    protected var map: ColumnNameIndexMap = emptyMap()
 
     fun initColumnIndexMap(cursor: Cursor) {
-        map.clear()
-        map.putAll(parseColumnIndex(cursor))
+        map = parseColumnIndex(cursor)
     }
 
     /**
@@ -85,13 +85,13 @@ abstract class ICursorParser<T>(
         return getStringOrNull(columnIndex) ?: defaultValue
     }
 
-    protected fun Cursor.getLongOr(columnName: String, defaultValue: Long=0L): Long {
+    protected fun Cursor.getLongOr(columnName: String, defaultValue: Long = 0L): Long {
         val columnIndex = map.valueOf(columnName)
         if (columnIndex == -1) return defaultValue
         return getLongOrNull(columnIndex) ?: defaultValue
     }
 
-    protected fun Cursor.getIntOr(columnName: String, defaultValue: Int=0): Int {
+    protected fun Cursor.getIntOr(columnName: String, defaultValue: Int = 0): Int {
         val columnIndex = map.valueOf(columnName)
         if (columnIndex == -1) return defaultValue
         return getIntOrNull(columnIndex) ?: defaultValue
@@ -103,7 +103,7 @@ abstract class ICursorParser<T>(
         return getShortOrNull(columnIndex) ?: defaultValue
     }
 
-    protected fun Cursor.getFloatOr(columnName: String, defaultValue: Float= 0.0f): Float {
+    protected fun Cursor.getFloatOr(columnName: String, defaultValue: Float = 0.0f): Float {
         val columnIndex = map.valueOf(columnName)
         if (columnIndex == -1) return defaultValue
         return getFloatOrNull(columnIndex) ?: defaultValue
@@ -203,3 +203,4 @@ fun Cursor.getBlobOrNull(columnIndex: Int): ByteArray? {
 
 
 //</editor-fold>
+private const val TAG = "CursorExt"

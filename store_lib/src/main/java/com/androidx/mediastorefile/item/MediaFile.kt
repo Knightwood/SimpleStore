@@ -8,7 +8,7 @@
 
 package com.androidx.mediastorefile.item
 
-class MediaFile(
+data class MediaFile(
     //api 1
     override var _id: Long = 0,
     override var _count: Int = 0,

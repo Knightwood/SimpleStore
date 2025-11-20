@@ -6,7 +6,7 @@ package com.androidx.mediastorefile.item
  * @constructor Create empty NoMediaFile
  * @property property
  */
-class NoMediaFile(
+data class NoMediaFile(
     val parent: Int,
     val media_type: Int,
     private val property: FakeMediaFile

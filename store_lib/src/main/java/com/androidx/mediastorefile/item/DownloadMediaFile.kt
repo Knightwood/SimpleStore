@@ -10,7 +10,7 @@ package com.androidx.mediastorefile.item
 
 import android.provider.MediaStore
 
-class DownloadMediaFile(
+data class DownloadMediaFile(
     /**
      * [MediaStore.DownloadColumns.DOWNLOAD_URI]
      */
