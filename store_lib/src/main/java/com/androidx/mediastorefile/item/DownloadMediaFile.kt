@@ -10,6 +10,9 @@ package com.androidx.mediastorefile.item
 
 import android.provider.MediaStore
 
+/**
+ * [android.provider.MediaStore.DownloadColumns]
+ */
 data class DownloadMediaFile(
     /**
      * [MediaStore.DownloadColumns.DOWNLOAD_URI]
@@ -19,5 +22,5 @@ data class DownloadMediaFile(
      * [MediaStore.DownloadColumns.REFERER_URI]
      */
     var referer_uri: String? = null,
-    val property: FakeMediaFile
-) : FakeMediaFile by property
+    val property: IMediaFile
+) : IMediaFile by property

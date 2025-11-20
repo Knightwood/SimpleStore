@@ -13,7 +13,7 @@ data class ImageMediaFile(
     val fNumber: String? = null,               // 对应 F_NUMBER
     val iso: Int? = null,                      // 对应 ISO
     val sceneCaptureType: Int? = null,         // 对应 SCENE_CAPTURE_TYPE
-    private val property: FakeMediaFile
-) : FakeMediaFile by property {
+    private val property: IMediaFile
+) : IMediaFile by property {
 
 }

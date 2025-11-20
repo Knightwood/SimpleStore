@@ -8,6 +8,9 @@
 
 package com.androidx.mediastorefile.item
 
+/**
+ * [android.provider.MediaStore.MediaColumns]
+ */
 data class MediaFile(
     //api 1
     override var _id: Long = 0,
@@ -60,5 +63,5 @@ data class MediaFile(
     override var compilation: String? = null,
     override var bitrate: Int = 0,
     override var capture_framerate: Float = 0.0f,
-) : FakeMediaFile
+) : IMediaFile
 

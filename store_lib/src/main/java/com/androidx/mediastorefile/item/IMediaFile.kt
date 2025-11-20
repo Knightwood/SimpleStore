@@ -1,6 +1,9 @@
 package com.androidx.mediastorefile.item
 
-interface FakeMediaFile {
+/**
+ * [android.provider.MediaStore.MediaColumns]
+ */
+interface IMediaFile {
     //<editor-fold desc="api 1">
 
     /**

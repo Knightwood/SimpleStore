@@ -98,6 +98,6 @@ data class VideoMediaFile(
      * @see android.provider.MediaStore.Video.VideoColumns.COLOR_RANGE
      */
     val color_range: Int = 0,
-    private val property: FakeMediaFile
-) : FakeMediaFile by property
+    private val property: IMediaFile
+) : IMediaFile by property
 

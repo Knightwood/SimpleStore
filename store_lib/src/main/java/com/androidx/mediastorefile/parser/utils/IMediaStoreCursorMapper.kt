@@ -34,7 +34,7 @@ interface ICursorMapper0<DATA> {
      * @param dataCreator 生成用于映射表结构的数据类
      * @return 映射结果数据集合
      */
-    fun parse(cursor: Cursor, dataCreator: () -> DATA): MutableList<DATA> {
+    fun parse(cursor: Cursor, dataCreator: () -> DATA): List<DATA> {
         val result: MutableList<DATA> = mutableListOf()
         if (cursor.isLast) {
             Log.d(TAG, "parse: 没数据了")
@@ -70,7 +70,7 @@ interface ICursorMapper<DATA> : ICursorMapper0<DATA> {
      * @param cursor Cursor
      * @return 映射结果数据集合
      */
-    fun parse(cursor: Cursor): MutableList<DATA>
+    fun parse(cursor: Cursor): List<DATA>
 }
 
 /**
@@ -136,7 +136,7 @@ class CursorMapper<DATA>(val dataCreator: () -> DATA) :
         return mapOneRowFrom(cursor, dataCreator())
     }
 
-    override fun parse(cursor: Cursor): MutableList<DATA> {
+    override fun parse(cursor: Cursor): List<DATA> {
         return parse(cursor, dataCreator)
     }
 
@@ -237,7 +237,7 @@ class AggregationCursorMapper<DATA>(
      */
     override fun parse(
         cursor: Cursor,
-    ): MutableList<DATA> {
+    ): List<DATA> {
         return parse(cursor, { dataCreator(cursor) })
     }
 }
